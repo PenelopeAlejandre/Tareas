@@ -6,10 +6,14 @@ document.addEventListener("DOMContentLoaded", function() {
     const noButton = document.getElementById('noButton');
     const resultText = document.getElementById('result');
 
+    let lowerBound, upperBound;
+
     startButton.addEventListener('click', () => {
         startButton.style.display = 'none';
         guessDiv.style.display = 'block';
-        guessNumber.innerText = 50; // Empezamos a adivinar desde la mitad del rango (50)
+        lowerBound = 1;
+        upperBound = 100;
+        guessNumber.innerText = Math.floor(Math.random() * (upperBound - lowerBound + 1)) + lowerBound;
     });
 
     yesButton.addEventListener('click', () => {
@@ -17,8 +21,15 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     noButton.addEventListener('click', () => {
-        let lowerBound = parseInt(guessNumber.innerText) + 1;
-        let upperBound = 100;
+        let currentGuess = parseInt(guessNumber.innerText);
+        // Si el intento anterior fue demasiado bajo, actualizamos el límite inferior
+        // Si fue demasiado alto, actualizamos el límite superior
+        if (currentGuess < parseInt(noButton.innerText)) {
+            lowerBound = currentGuess + 1;
+        } else {
+            upperBound = currentGuess - 1;
+        }
+        // Calculamos el nuevo intento dividiendo el rango actual a la mitad
         let newGuess = Math.floor((lowerBound + upperBound) / 2);
         guessNumber.innerText = newGuess;
     });
